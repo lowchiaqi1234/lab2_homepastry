@@ -5,6 +5,8 @@ import 'mainScreen.dart';
 import 'registrationScreen.dart';
 import 'package:http/http.dart' as http;
 
+import 'user.dart';
+
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -156,18 +158,7 @@ class _LoginScreenState extends State<LoginScreen> {
           "password": _password,
         }).then((response) {
       print(response.body);
-      if (response.body == "success") {
-        Fluttertoast.showToast(
-            msg: "Welcome to Home Pastry",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.teal[300],
-            textColor: Colors.white,
-            fontSize: 16.0);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (contemt) => MainScreen()));
-      } else {
+      if (response.body == "failed") {
         Fluttertoast.showToast(
             msg: "Login Failed",
             toastLength: Toast.LENGTH_SHORT,
@@ -176,6 +167,24 @@ class _LoginScreenState extends State<LoginScreen> {
             backgroundColor: Colors.deepOrange[400],
             textColor: Colors.white,
             fontSize: 16.0);
+      } else {
+        List userdata = response.body.split(",");
+        User user = User(
+            email: _email,
+            password: _password,
+            username: userdata[1],
+            datereg: userdata[2],
+            status: userdata[3]);
+        Fluttertoast.showToast(
+            msg: "Welcome to Home Pastry",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.teal[300],
+            textColor: Colors.white,
+            fontSize: 16.0);
+        Navigator.push(context,
+            MaterialPageRoute(builder: (contemt) => MainScreen(user: user)));
       }
     });
 
