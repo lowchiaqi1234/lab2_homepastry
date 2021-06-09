@@ -199,7 +199,7 @@ class _RegistrationScreen extends State<RegistrationScreen> {
     String _username = _usernameController.text.toString();
     String _cpassword = _cpasswordController.text.toString();
 
-    if (_email.isEmpty || _password.isEmpty || _username.isEmpty) {
+    if (_email.isEmpty || _password.isEmpty || _username.isEmpty || _cpassword.isEmpty) {
       Fluttertoast.showToast(
           msg: "Please complete your detail",
           toastLength: Toast.LENGTH_SHORT,
