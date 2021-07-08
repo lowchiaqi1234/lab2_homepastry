@@ -151,22 +151,22 @@ class _CategoryState extends State<Category> {
   }
 
   void _bread() {
-    Navigator.push(context, MaterialPageRoute(builder: (contemt) => Bread()));
+    Navigator.push(context, MaterialPageRoute(builder: (contemt) => Bread(user: widget.user,)));
   }
 
   void _dessert() {
-    Navigator.push(context, MaterialPageRoute(builder: (contemt) => Dessert()));
+    Navigator.push(context, MaterialPageRoute(builder: (contemt) => Dessert(user: widget.user)));
   }
 
   void _pastries() {
-    Navigator.push(context, MaterialPageRoute(builder: (contemt) => Patries()));
+    Navigator.push(context, MaterialPageRoute(builder: (contemt) => Patries(user: widget.user)));
   }
 
   void _cake() {
-    Navigator.push(context, MaterialPageRoute(builder: (contemt) => Cake()));
+    Navigator.push(context, MaterialPageRoute(builder: (contemt) => Cake(user: widget.user)));
   }
 
   void _other() {
-    Navigator.push(context, MaterialPageRoute(builder: (contemt) => Other()));
+    Navigator.push(context, MaterialPageRoute(builder: (contemt) => Other(user: widget.user)));
   }
 }
