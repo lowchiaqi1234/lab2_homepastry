@@ -18,11 +18,12 @@ if ($result->num_rows > 0)
     while ($row = $result->fetch_assoc())
     {
        
-        $productlist[prid] = $row["prid"];
-        $productlist[prname] = $row["prname"];
-        $productlist[prtype] = $row["prtype"];
-        $productlist[prprice] = $row["prprice"];
-        $productlist[prqty] = $row["prqty"];
+        $productlist['prid'] = $row["prid"];
+        $productlist['prname'] = $row["prname"];
+        $productlist['prtype'] = $row["prtype"];
+        $productlist['prprice'] = $row["prprice"];
+        $productlist['prqty'] = $row["prqty"];
+        $productlist['prdes'] = $row["prdes"];
         array_push($products["products"], $productlist);
     }
     echo json_encode($products);
