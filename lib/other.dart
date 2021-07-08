@@ -2,10 +2,16 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:fluttertoast_renameuiviewtoast/fluttertoast.dart';
+import 'package:homepastry/cartpage.dart';
 import 'package:http/http.dart' as http;
+import '../user.dart';
 
 
 class Other extends StatefulWidget {
+  final User user;
+
+  const Other({Key key, this.user}) : super(key: key);
   @override
   _OtherState createState() => _OtherState();
 }
@@ -13,10 +19,12 @@ class Other extends StatefulWidget {
 class _OtherState extends State<Other> {double screenHeight, screenWidth;
   String _title = "Loading...";
   List _productList;
+ int cartitem = 0;
   @override
   void initState() {
     super.initState();
-    _loadproduct();
+    _testasync();
+
   }
   
   @override
@@ -30,6 +38,18 @@ class _OtherState extends State<Other> {double screenHeight, screenWidth;
         appBar: AppBar(
           backgroundColor: Colors.orangeAccent,
           title: Text('Other'),
+           actions: [
+              TextButton.icon(
+                  onPressed: () => {_cart()},
+                  icon: Icon(
+                    Icons.shopping_cart,
+                    color: Colors.black,
+                  ),
+                  label: Text(
+                    cartitem.toString(),
+                    style: TextStyle(color: Colors.black),
+                  )),
+            ],
         ),
         body: Center(
           child: Container(
@@ -153,7 +173,7 @@ class _OtherState extends State<Other> {double screenHeight, screenWidth;
                                               fontSize: 15,
                                               color: Colors.white),
                                         ),
-                                        onPressed: _order,
+                                        onPressed: () => {_order(index)},
                                         color: Colors.orange,
                                       ),
                                     ]),
@@ -190,6 +210,56 @@ class _OtherState extends State<Other> {double screenHeight, screenWidth;
     });
   }
 
-  void _order() {
+_cart() {
+    Navigator.of(context).push( MaterialPageRoute(builder: (contemt) => CartPage(user: widget.user)));
+  _loadproduct();
+  }
+
+  void _order(int index) {
+     String email = widget.user.email;
+    String prid = _productList[index]['prid'];
+    http.post(
+        Uri.parse(
+            "https://lowtancqx.com/s270910/homepastry/php/insertproduct.php"),
+        body: {"email": email, "prid": prid}).then((response) {
+      print(response.body);
+      if (response.body == "failed") {
+        Fluttertoast.showToast(
+            msg: "failed",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.deepOrange[400],
+            textColor: Colors.white,
+            fontSize: 16.0);
+      } else {
+        Fluttertoast.showToast(
+            msg: "success",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.teal[300],
+            textColor: Colors.white,
+            fontSize: 16.0);
+        
+      }
+    });
+  }
+    Future<void> _testasync() async {
+    _loadproduct();
+    _loadCart();
+  }
+
+  void _loadCart() {
+      String email = widget.user.email;
+   http.post(
+        Uri.parse(
+            "https://lowtancqx.com/s270910/homepastry/php/loadcart.php"),
+        body: {"email": email}).then((response) {
+      setState(() {
+        cartitem = int.parse(response.body);
+        print(cartitem);
+      });
+    });
   }
 }
