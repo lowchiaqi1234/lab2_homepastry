@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:homepastry/about.dart';
+import 'package:homepastry/cartpage.dart';
+import 'package:homepastry/detail.dart';
+import 'package:homepastry/loginScreen.dart';
 import 'package:homepastry/user.dart';
 
 import 'category.dart';
@@ -45,10 +49,11 @@ class _MyDrawerState extends State<MyDrawer> {
                             user: widget.user,
                           )));
             }),
-            ListTile(
+        ListTile(
             leading: Icon(Icons.category),
             title: Text("Category"),
-            onTap: () {Navigator.pop(context);
+            onTap: () {
+              Navigator.pop(context);
               Navigator.pop(context);
               Navigator.push(
                   context,
@@ -62,24 +67,42 @@ class _MyDrawerState extends State<MyDrawer> {
             title: Text("Cart"),
             onTap: () {
               Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (content) => CartPage(
+                            user: widget.user,
+                          )));
             }),
-        ListTile(
-            leading: Icon(Icons.person),
-            title: Text("My Profile"),
+         ListTile(
+            leading: Icon(Icons.shop_two_outlined),
+            title: Text("Detail"),
             onTap: () {
               Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (content) => Detail(
+                            user: widget.user,
+                          )));
             }),
         ListTile(
-           leading: Icon(Icons.info),
+            leading: Icon(Icons.info),
             title: Text("About Us"),
             onTap: () {
               Navigator.pop(context);
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (content) => About(user: widget.user,)));
             }),
         ListTile(
-           leading: Icon(Icons.logout),
+            leading: Icon(Icons.logout),
             title: Text("Logout"),
             onTap: () {
               Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (content) => LoginScreen()));
             })
       ],
     ));

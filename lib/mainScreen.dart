@@ -1,12 +1,14 @@
-import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast_renameuiviewtoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'cartpage.dart';
 import 'loginScreen.dart';
 import 'myDrawer.dart';
 import 'user.dart';
+import 'dart:convert';
 
 class MainScreen extends StatefulWidget {
   final User user;
@@ -27,6 +29,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _testasync();
+
   }
 
   @override
@@ -231,7 +234,7 @@ class _MainScreenState extends State<MainScreen> {
                                                   fontSize: 15,
                                                   color: Colors.white),
                                             ),
-                                            onPressed: _order,
+                                            onPressed: () => {_order(index)},
                                             color: Colors.orange,
                                           ),
                                         ]),
@@ -269,11 +272,45 @@ class _MainScreenState extends State<MainScreen> {
 
   Future<void> _testasync() async {
     _loadproduct("all");
+    _loadCart();
   }
 
-  _cart() {}
+  _cart() {
+    Navigator.of(context).push( MaterialPageRoute(builder: (contemt) => CartPage(user: widget.user)));
+  _loadproduct("all");
+  }
 
-  void _order() {}
+  _order(int index) async {
+    await Future.delayed(Duration(seconds: 1));
+    String email = widget.user.email;
+    String prid = _productList[index]['prid'];
+    http.post(
+        Uri.parse(
+            "https://lowtancqx.com/s270910/homepastry/php/insertproduct.php"),
+        body: {"email": email, "prid": prid}).then((response) {
+      print(response.body);
+      if (response.body == "failed") {
+        Fluttertoast.showToast(
+            msg: "failed",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.deepOrange[400],
+            textColor: Colors.white,
+            fontSize: 16.0);
+      } else {
+        Fluttertoast.showToast(
+            msg: "success",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.teal[400],
+            textColor: Colors.white,
+            fontSize: 16.0);
+        _loadCart();
+      }
+    });
+  }
 
   Future<bool> _onBackPressed() {
     return showDialog(
@@ -310,5 +347,18 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ) ??
         false;
+  }
+
+  void _loadCart() {
+      String email = widget.user.email;
+   http.post(
+        Uri.parse(
+            "https://lowtancqx.com/s270910/homepastry/php/loadcart.php"),
+        body: {"email": email}).then((response) {
+      setState(() {
+        cartitem = int.parse(response.body);
+        print(cartitem);
+      });
+    });
   }
 }
